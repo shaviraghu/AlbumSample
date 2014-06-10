@@ -1,6 +1,5 @@
 package com.sample.album;
 
-
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -57,8 +56,11 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+    
+    private String[] mDrawerListViewItems;
 
     public NavigationDrawerFragment() {
+    	
     }
 
     @Override
@@ -67,12 +69,16 @@ public class NavigationDrawerFragment extends Fragment {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
-
+        
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         }
-
+        this.mDrawerListViewItems = new String[]{
+        		getString(R.string.title_section1),
+                getString(R.string.title_section2),
+                getString(R.string.title_section3)
+                };
         selectItem(mCurrentSelectedPosition);
     }
 
@@ -97,12 +103,9 @@ public class NavigationDrawerFragment extends Fragment {
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                }));
+                mDrawerListViewItems));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+        getActionBar().setTitle((String)mDrawerListView.getItemAtPosition(mCurrentSelectedPosition));
         return mDrawerListView;
     }
 
@@ -135,6 +138,7 @@ public class NavigationDrawerFragment extends Fragment {
                 }
 
                 getActivity().invalidateOptionsMenu();
+                getActionBar().setTitle((String)mDrawerListView.getItemAtPosition(mCurrentSelectedPosition));
             }
 
             @Override
@@ -150,6 +154,7 @@ public class NavigationDrawerFragment extends Fragment {
                             .getDefaultSharedPreferences(getActivity());
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
+                getActionBar().setTitle("AlbumSample");
             }
         };
 
@@ -176,7 +181,8 @@ public class NavigationDrawerFragment extends Fragment {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(position);
+        	String item = mDrawerListViewItems[position];
+            mCallbacks.onNavigationDrawerItemSelected(item);
         }
     }
 
@@ -213,6 +219,6 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     public static interface NavigationDrawerCallbacks {
-        void onNavigationDrawerItemSelected(int position);
+        void onNavigationDrawerItemSelected(String selectedItem);
     }
 }

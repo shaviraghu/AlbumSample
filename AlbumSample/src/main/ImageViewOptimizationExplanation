@@ -1,0 +1,11 @@
+The utility classes were written referring to the nice tutorial by Antoine Merle
+@ http://antoine-merle.com/listview-optimisations-part-2-displaying-images-in-your-lists/
+Thanks to him. 
+
+As explained in the comments within the code and also in the above mentioned tutorial, the image to 
+be retrieved from the server is first checked for its existence in the LRUCache, if it does not exist 
+then a second check is made in the FileCache, if it does not exist in FileCache too, then only
+a request is made to the server and the image is downloaded. The actual download of image is done in an
+asynchronous task, keeping the UI responsive and updating images immediately after they are downloaded.
+The FileCache uses explicit saving of the images on the device storage, having hashcode of its URL as 
+a key to access later.

@@ -1,7 +1,6 @@
 package com.sample.album;
 
 import android.app.Activity;
-
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -41,12 +40,21 @@ public class AlbumSampleMain extends Activity
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
+    public void onNavigationDrawerItemSelected(String selectedItem) {
         FragmentManager fragmentManager = getFragmentManager();
-
+        Bundle args = new Bundle();
+        args.putString("itemType", selectedItem.substring(0, selectedItem.length()-1));
         ItemsList itemsList = new ItemsList();
+        itemsList.setArguments(args);
         fragmentManager.beginTransaction()
                 .replace(R.id.container, itemsList)
                 .commit();
+        if(getFragmentManager().findFragmentById(R.id.detailcontainer)!=null) {
+	        ItemsList itemsList2 = new ItemsList();
+	        itemsList2.setArguments(args);
+	        fragmentManager.beginTransaction()
+	        .replace(R.id.detailcontainer, itemsList2)
+	        .commit();
+        }
     }
 }
